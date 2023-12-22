@@ -1,0 +1,71 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/MVALENZDELVI/api-transaction/1.0.0
+info:
+  title: Transaction Microservice
+  description: Transaction Microservice
+  version: 1.0.0
+paths:
+  /transaction:
+    post:
+      tags:
+        - Transaction
+      summary: Add a new Transaction to the database
+      description: Add a new Transaction to the database
+      operationId: addTransaction
+      requestBody:
+        description: Create a new Transaction in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        "405":
+          description: Invalid input
+components:
+  schemas:
+    Transaction:
+      required:
+        - amount
+        - transactionType
+        - accoundId
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        amount:
+          type: number
+          format: currency
+          description: Transaction Amount
+          example: 1000.00
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation date
+          example: "2023-12-10T20:30:00Z"
+          readOnly: true
+        transactionType:
+          type: string
+          description: Transaction Type
+          example: "DEPOSIT o WITHDRAWAL"
+        accountId:
+          type: string
+          description: Account ID
+          example: 6386e2cc35049a3f6bfcfd7b
+  requestBodies:
+    Transaction:
+      description: Transaction object that needs to be added to the database
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Transaction'

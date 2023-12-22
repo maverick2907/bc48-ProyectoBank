@@ -1,0 +1,263 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/MVALENZDELVI/api-product/1.0.0
+info:
+  title: Product Microservice
+  description: Product Microservice
+  version: 1.0.0
+paths:
+  /product:
+    post:
+      tags:
+        - product
+      summary: Add a new Product to the database
+      description: Add a new Product to the database
+      operationId: save
+      requestBody:
+        description: Create a new Product in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "405":
+          description: Invalid input
+    get:
+      tags:
+        - product
+      summary: Find Products
+      description: Returns a all Products
+      operationId: findAll
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        "404":
+          description: Invalid status value
+  /product/{id}:
+    put:
+      tags:
+        - product
+      summary: Update an existing Product
+      description: Update an existing Product by Id
+      operationId: update
+      parameters:
+        - name: id
+          in: path
+          description: ID of Product to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent Product in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Product not found
+        "405":
+          description: Validation exception
+    get:
+      tags:
+        - product
+      summary: Find Product by ID
+      description: Returns a single Product
+      operationId: findById
+      parameters:
+        - name: id
+          in: path
+          description: ID of Product to return
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Product not found
+    delete:
+      tags:
+        - product
+      summary: Delete a Product
+      description: delete a Product
+      operationId: delete
+      parameters:
+        - name: id
+          in: path
+          description: Product id to delete
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Invalid Product value
+  /product/findByName:
+    get:
+      tags:
+        - product
+      summary: Find Product by Name
+      description: Returns a single Product
+      operationId: findAllByName
+      parameters:
+        - name: name
+          in: query
+          description: Name of Product to return
+          required: true
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Product not found
+components:
+  schemas:
+    BankAccount:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name
+          enum:
+            - Ahorro
+            - Corriente
+            - Plazo fijo
+        maintenance:
+          type: number
+          format: currency
+          description: maintenance fee
+          example: 10.00
+        transactionFee:
+          type: number
+          format: currency
+          description: transaction fee
+          example: 3.00
+        movement:
+          type: integer
+          description: maximum limit of monthly movements
+          format: int32
+          example: 10
+        freeTransaction:
+          type: integer
+          description: Free Transaction
+          format: int32
+          example: 5
+        fixedDay:
+          type: integer
+          description: specific day for a movement
+          format: int32
+          minimum: 1
+          example: 1
+    BankCredit:
+      required:
+        - creditCard
+        - numberOfCredits
+      type: object
+      properties:
+        creditCard:
+          type: string
+          description: credit card
+          enum:
+            - Personal
+            - Empresarial
+        numberOfCredits:
+          type: integer
+          description: Number Of Credits
+          format: int32
+          minimum: 1
+          example: 1
+    Product:
+      required:
+        - type
+        - currency
+        - name
+        - description
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        type:
+          type: string
+          description: Product type
+          enum:
+            - Pasivos
+            - Activos
+        currency:
+          type: string
+          description: Currency
+          enum:
+            - PEN
+        description:
+          type: string
+          description: Description
+          example: cuentas bancarias
+        bankAccount:
+          $ref: '#/components/schemas/BankAccount'
+        bankCredit:
+          $ref: '#/components/schemas/BankCredit'
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation date
+          example: "2022-11-30T20:30:00Z"
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          description: Updated date
+          example: "2022-11-30T20:30:00Z"
+          readOnly: true
+  requestBodies:
+    product:
+      description: Product object that needs to be added to the database
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Product'

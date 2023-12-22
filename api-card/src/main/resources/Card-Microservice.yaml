@@ -1,0 +1,459 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/MVALENZDELVI/api-card/1.0.0
+info:
+  title: Card Microservice
+  description: Card Microservice
+  version: 1.0.0
+paths:
+  /card:
+    post:
+      tags:
+        - Card
+      summary: Add a new Card to the database
+      description: Add a new Card to the database
+      operationId: addCard
+      requestBody:
+        description: Create a new Card in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Card'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+        "405":
+          description: Invalid input
+    get:
+      tags:
+        - Card
+      summary: Find Cards
+      description: Returns a all Cards
+      operationId: getCards
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Card'
+        "404":
+          description: Invalid status value
+  /card/{id}:
+    put:
+      tags:
+        - Card
+      summary: Update an existing Card
+      description: Update an existing Card by Id
+      operationId: updateCard
+      parameters:
+        - name: id
+          in: path
+          description: ID of Card to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent Card in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Card'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Card not found
+        "405":
+          description: Validation exception
+    get:
+      tags:
+        - Card
+      summary: Find Card by ID
+      description: Returns a single Card
+      operationId: findCardById
+      parameters:
+        - name: id
+          in: path
+          description: ID of Card to return
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Card not found
+    delete:
+      tags:
+        - Card
+      summary: Delete a Card
+      description: delete a Card
+      operationId: deleteCardById
+      parameters:
+        - name: id
+          in: path
+          description: Card id to delete
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Invalid Card value
+  /card/customer/{customerId}:
+    get:
+      tags:
+        - Card
+      summary: Find Card by Customer ID
+      description: Returns Cards
+      operationId: findCardByCustomerId
+      parameters:
+        - name: customerId
+          in: path
+          description: ID of Customer to return Card
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Card'
+        "404":
+          description: Invalid status value
+  /card/number/{number}:
+    get:
+      tags:
+        - Card
+      summary: Find Card by Number Card
+      description: Returns Cards
+      operationId: findCardByNumber
+      parameters:
+        - name: number
+          in: path
+          description: Number Card to return Card
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+        "400":
+          description: Invalid Number supplied
+        "404":
+          description: Card not found
+  /card/{cardId}/consume:
+    post:
+      tags:
+        - Card
+      summary: Add a new Consume to the database
+      description: Add a new Consume to the database
+      operationId: addConsume
+      parameters:
+        - name: cardId
+          in: path
+          description: Card ID to return Card
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        description: Create a new Consume in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Consume'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Consume'
+        "405":
+          description: Invalid input
+components:
+  schemas:
+    Credit:
+      required:
+        - creditLineAmount
+        - billedMembershipFeeAmount
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status
+          enum:
+            - Activo
+            - Completo
+            - Suspendido
+        creditLineAmount:
+          type: number
+          format: currency
+          minimum: 0.00
+          description: Credit Line Available Amount
+          example: 1000
+        creditLineAvailableAmount:
+          type: number
+          format: currency
+          minimum: 0.00
+          description: Credit Line Available Amount
+          example: 400
+        usedCreditLineAmount:
+          type: number
+          format: currency
+          minimum: 0.00
+          description: Used Credit Line Amount
+          example: 600
+        accruedPaymentAmount:
+          type: number
+          format: currency
+          minimum: 0.00
+          description: Accrued Payment Amount
+          example: 0.00
+        billedMembershipFeeAmount:
+          type: number
+          format: currency
+          minimum: 0.00
+          description: Billed Membership Fee Amount
+          example: 100.00
+    Bill:
+      required:
+        - status
+        - billingDay
+        - paymentDueDate
+        - billedInterestsAmount
+        - fixedInstallmentsQuantity
+      type: object
+      properties:
+        billingDay:
+          type: integer
+          description: Billing Day
+          format: int32
+          example: 16
+        paymentDueDate:
+          type: string
+          format: date
+          description: Payment Due Date
+          example: "2023-12-10"
+        amount:
+          type: number
+          format: currency
+          minimum: 0.00
+          description: Billed Interests Amount
+          example: 600
+        billedInterestsAmount:
+          type: number
+          format: currency
+          minimum: 0.00
+          description: Billed Interests Amount
+          example: 0.5
+        fixedInstallmentsQuantity:
+          type: integer
+          format: int32
+          minimum: 0
+          description: Fixed Installments Quantity
+          example: 2
+        currentFixedQuota:
+          type: integer
+          format: int32
+          minimum: 0
+          description: Current Fixed Quota
+          example: 1
+        fixedPayAmount:
+          type: number
+          format: currency
+          minimum: 0.00
+          description: Fixed Pay Amount
+          example: 450.00
+        description:
+          type: string
+          description: description
+          example: Iphone
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation date
+          example: "2023-12-10T20:30:00Z"
+    Card:
+      required:
+        - numberCard
+        - type
+        - status
+        - expiration
+        - cvv
+        - cashWithdrawalAllowed
+        - titularId
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        numberCard:
+          type: string
+          description: Number Card
+          example: 0005412540001454001
+        type:
+          type: string
+          description: Card Type
+          enum:
+            - Credito
+            - Debito
+        status:
+          type: string
+          description: Card Status
+          enum:
+            - Activa
+            - Expirada
+            - Bloqueada
+        expiration:
+          type: string
+          format: date
+          description: Expiration Date
+          example: "2024-12-30"
+        cvv:
+          type: string
+          description: CVV
+          example: 123
+        cashWithdrawalAllowed:
+          type: number
+          format: currency
+          minimum: 0.00
+          description: Cash Withdrawal Allowed
+          example: 3000.00
+        productId:
+          type: string
+          description: Product ID
+          example: 6386e2cc35049a3f6bfcfd7b
+        titularId:
+          type: string
+          description: Titular
+          example: 63859d334306d301128cf352
+        primaryAccountId:
+          type: string
+          description: Primary Account ID
+          example: 6386e2cc35049a3f6bfcfd7b
+        associatedAccountId:
+          type: array
+          items:
+            type: string
+            description: Associated Account
+            example: 63859d334306d301128cf352
+        credit:
+          $ref: '#/components/schemas/Credit'
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation date
+          example: "2023-12-10T20:30:00Z"
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          description: Updated date
+          example: "2023-12-10T20:30:00Z"
+          readOnly: true
+    Consume:
+      required:
+        - cardId
+        - amount
+        - description
+        - destinationAccountId
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        cardId:
+          type: string
+          description: Card ID
+          readOnly: true
+        amount:
+          type: number
+          format: currency
+          minimum: 0.00
+          description: Amount
+          example: 600
+        description:
+          type: string
+          description: Description
+          example: Replay
+        destinationAccountId:
+          type: string
+          description: Destination Account ID
+          example: 63859d33434879511128cf353
+        billingDay:
+          type: integer
+          description: Billing Day
+          format: int32
+          example: 16
+        billedInterestsAmount:
+          type: number
+          format: currency
+          minimum: 0.00
+          description: billed Interests Amount
+          example: 0.5
+        fixedInstallmentsQuantity:
+          type: integer
+          description: fixed Installments Quantity
+          format: int32
+          example: 2
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation date
+          example: "2023-12-10T20:30:00Z"
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          description: Updated date
+          example: "2023-12-10T20:30:00Z"
+          readOnly: true
+  requestBodies:
+    Card:
+      description: Card object that needs to be added to the database
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Card'

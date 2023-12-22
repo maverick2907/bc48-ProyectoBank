@@ -1,0 +1,111 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/MVALENZDELVI/api-movement/1.0.0
+info:
+  title: Movement Microservice
+  description: Movement Microservice
+  version: 1.0.0
+paths:
+  /movement:
+    get:
+      tags:
+        - Movement
+      summary: Find Movement
+      description: Returns a all Movements
+      operationId: getMovements
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movement'
+        "404":
+          description: Invalid status value
+  /movement/account/{id}:
+    get:
+      tags:
+        - Movement
+      summary: Find Movement by AccountID
+      description: Returns a list Movements
+      operationId: findAccountById
+      parameters:
+        - name: id
+          in: path
+          description: ID of Account to return
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                $ref: '#/components/schemas/Movement'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Accounts not founds
+components:
+  schemas:
+    Movement:
+      required:
+        - idTransaction
+        - amount
+        - transactionType
+        - accountId
+        - creationDate
+        - processDate
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        idTransaction:
+          type: string
+          description: Transaction ID
+          example: 63859d334306d301128cf352
+          readOnly: true
+        transactionType:
+          type: string
+          description: Transaction Type
+          example: DEPOSIT
+          readOnly: true
+        amount:
+          type: number
+          format: currency
+          description: Balance Amount
+          example: 1000.00
+        accountId:
+          type: string
+          description: Account ID
+          example: 6386e2cc35049a3f6bfcfd7b
+          readOnly: true
+        creationDate:
+          type: string
+          format: date-time
+          description: Creation date
+          example: "2023-12-10T20:30:00Z"
+          readOnly: true
+        processDate:
+          type: string
+          format: date-time
+          description: Process date
+          example: "2023-12-10T20:30:00Z"
+          readOnly: true
+  requestBodies:
+    Movement:
+      description: Movement object that needs to be added to the database
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Movement'
